@@ -1,5 +1,5 @@
 --------------------------------------------------------
--- Minetest :: Bitwise Operations Mod v1.1 (bitwise)
+-- Minetest :: Bitwise Helpers Mod v1.1 (bitwise)
 --
 -- See README.txt for licensing and other information.
 -- Copyright (c) 2020, Leslie E. Krause
@@ -35,6 +35,8 @@ local nib_map = {
 	[14] = { on, on, on, off },
 	[15] = { on, on, on, on }
 }
+
+local _ = nil
 
 local function is_match( text, glob )
      _ = { string.match( text, glob ) }
@@ -180,7 +182,7 @@ local function bits_format( str, ... )
 	end
 
 	str = string.gsub( str, "(%%(.-)([A-Za-z]))", function ( token, attrs, option )
-		if option == "b" and is_match( attrs, "^([0-]?)([0-9]*)$" ) or is_match( attrs, "^([0-]?)([0-9]*):([0-9]+)$" ) then
+		if option == "b" ( and is_match( attrs, "^([0-]?)([0-9]*)$" ) or is_match( attrs, "^([0-]?)([0-9]*):([0-9]+)$" ) ) then
 			return parse_token( remove( args, 1 ), _[ 1 ], _[ 2 ], _[ 3 ] )
 		else
 			return string.format( token, remove( args, 1 ) )
