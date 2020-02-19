@@ -1,4 +1,4 @@
-Bitwise Operations Mod v1.1
+Bitwise Operations Mod v1.2
 By Leslie E. Krause
 
 Bitwise Operations is a pure-Lua implementation of various bit-manipulation functions, 
