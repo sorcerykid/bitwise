@@ -29,13 +29,12 @@ performance, you may want to localize the functions to bits_<func>.
 All of these functions can prove useful when debugging, or any application where you 
 need to examine and manipulate individual bits of either numbers or strings.
 
-bitwise.format( str, ... )
-
+ * bitwise.format( str, ... )
    Extends the string.format( ) function with an additional %b format specifier for 
    outputting numbers in binary notation. The str is a string that consists of one or 
    more format specifiers, each associated with an argument for substitution.
 
-   %[flag][field-width][:group-width]b
+      %[flag][field-width][:group-width]b
 
    The %b format specifier accepts a flag of either 0 to pad the field with leading 
    zeroes or - to left-justify the field. With no flag, the field will be padded with 
@@ -49,118 +48,123 @@ bitwise.format( str, ... )
    print( bitwise.format( "%032:4b", 65000 ) )
    --> 0000 0000 0000 0000 1111 1101 1110 1000
 
-bitwise.new( size, value )
-
+ * bitwise.new( size, value )
    Creates a new bit field (boolean array) for easily working with individual bits on
    the fly using Lua's builtin boolean operators.
 
-   * size is the length of the bit field (required)
-   * value is the boolean value to assign to each bit (defaults to false)
+    * size is the length of the bit field (required)
+    * value is the boolean value to assign to each bit (defaults to false)
 
    Example:
    bitwise.new( 4, true )
    ==> { true, true, true, true }
 
-bitwise.unpack( val, size )
-
+ * bitwise.unpack( val, size )
    Unpacks a number into a bit field.
 
-   * num is the unsigned integer to unpack (required)
-   * size is the length of the bit field to create, limited to 56-bits (required)
+    * num is the unsigned integer to unpack (required)
+    * size is the length of the bit field to create, limited to 56-bits (required)
 
    Example:
    bitwise.unpack( 16, 150 )
    ==> { true, false, false, true, false, true, true, false }
 
-bitwise.pack( bits )
-
+ * bitwise.pack( bits )
    Packs a bit field into a number.
 
-   * bits is the bit field to unpack, limited to 56 elements (required)
+    * bits is the bit field to unpack, limited to 56 elements (required)
 
    Example:
    print( bitwise.pack( { true, false, false, false, false, false, false, false } )
    --> 128
 
-bitwise.pack_string( bits )
-
+ * bitwise.pack_string( bits )
    Packs a bit field of arbitrary length into a string. Each set of 8 elements will
    produce an additional ASCII character.
 
-   * bits is the bit field to unpack (required)
+    * bits is the bit field to unpack (required)
 
    Example:
    print( bitwise.pack_string( { false, true, true, true, false, true, true, true } ) )
    --> w
 
-bitwise.to_string( bits, div )
-
+ * bitwise.to_string( bits, div )
    Transforms a bit field of arbitrary length into a binary-notation string.
 
-   * bits is the bit field to transform into a string (required)
-   * div is the group width for evenly spacing bits (optional)
+    * bits is the bit field to transform into a string (required)
+    * div is the group width for evenly spacing bits (optional)
 
    Example:
    print( bitwise.to_string( { true, false, true, true, false, true, true, true }, 4 ) )
    --> 1011 0111
 
-bitwise.from_string( str )
+ * bitwise.from_string( str )
+   Parses a binary-notation string and transforms it into a bit field.
 
-  Parses a binary-notation string and transforms it into a bit field.
+    * str is the string to transform into a bit field (required)
 
-  * str is the string to transform into a bit field (required)
+   Example:
+   bitwise.from_string( "1001" )
+   ==> { true, false, false, true }
 
-  Example:
-  bitwise.from_string( "1001" )
-  ==> { true, false, false, true }
+ * bitwise.binary( str )
+   Parses a binary-notation string and converts it into a number.
 
-bitwise.binary( str )
+    * str is the string to convert into a number (required)
 
-  Parses a binary-notation string and converts it into a number.
+   Example:
+   bitwise.binary( "00010010101110010001" )
+   ==> 76689
 
-  * str is the string to convert into a number (required)
+ * AND( num1, num2 )
+   Performs a logical bitwise AND operation on two numbers.
 
-  Example:
-  bitwise.binary( "00010010101110010001" )
-  ==> 76689
+    * num1 is an unsigned integer
+    * num2 is an unsigned integer
 
-AND( num1, num2 )
+ * OR( num1, num2 )
+   Performs a logical bitwise OR operation on two numbers. The number with the most
+   significant bit set will determine the resulting bit pattern's length.
 
-  Performs a logical bitwise AND operation on two numbers.
+    * num1 is an unsigned integer
+    * num2 is an unsigned integer
 
-  * num1 is an unsigned integer
-  * num2 is an unsigned integer
+ * XOR( num1, num2 )
+   Performs a logical bitwise XOR operation on two numbers. The number with the most
+   significant bit set will determine the resulting bit pattern's length.
 
-OR( num1, num2 )
+    * num1 is an unsigned integer
+    * num2 is an unsigned integer
 
-  Performs a logical bitwise OR operation on two numbers. The number with the most
-  significant bit set will determine the resulting bit pattern's length.
+ * NOT( num )
+   Performs a logical bitwise NOT operation on a number.
 
-  * num1 is an unsigned integer
-  * num2 is an unsigned integer
+    * num is an unsigned integer
 
-XOR( num1, num2 )
+   For finer grained control of the resulting bit-pattern length, you can provide a mask 
+   with the XOR() functions rather than using the NOT() function:
 
-  Performs a logical bitwise XOR operation on two numbers. The number with the most
-  significant bit set will determine the resulting bit pattern's length.
+   Examples:
+   NOT( 0x0F )
+   ==> 0x00
+   XOR( 0x0F, 0xFF )
+   ==> 0xF0
 
-  * num1 is an unsigned integer
-  * num2 is an unsigned integer
+ * NOT16( num )
+   Performs a logical bitwise NOT operation on a 16-bit number.
 
-NOT( num )
+    * num is an unsigned integer
 
-  Performs a logical bitwise NOT operation on a number.
+   The result is undefined for numbers larger than 16-bits, so be sure to mask the input
+   using the AND() function if in doubt.
 
-  * num is an unsigned integer
+ * NOT32( num )
+   Performs a logical bitwise NOT operation on a 32-bit number.
 
-  For finer grained control of the resulting bit-pattern length, you can provide a mask 
-  with the XOR() function rather than using the NOT() function:
+    * num is an unsigned integer
 
-  Examples:
-  NOT( 0x0F )
-  ==> 0x00
-  XOR( 0x0F, bitwise.binary( "11111111" ) )
-  ==> 0xF0
+   The result is undefined for numbers larger than 32-bits, so be sure to mask the input
+   using the AND() function if in doubt.
 
 
 Repository
@@ -178,6 +182,7 @@ Installation
 
   1) Unzip the archive into the mods directory of your game
   2) Rename the bitwise-master directory to "bitwise"
+  3) Add "bitwise" as a dependency to any mods using the API
 
 License of source code
 ----------------------------------------------------------
